@@ -23,9 +23,9 @@ class Mycar(GroundRobot):
         self.motion = MotionVW()
         self.append(self.motion)
 
-        self.teleport2 = Teleport2()
-        self.append(self.teleport2)
-        self.teleport2.add_interface('ros')
+        # self.teleport2 = Teleport2()
+        # self.append(self.teleport2)
+        # self.teleport2.add_interface('ros')
 
 
 
@@ -59,8 +59,8 @@ class Mycar(GroundRobot):
         # self.velocity.add_stream("ros","morse.middleware.ros.velocity.TwistStampedPublisher", topic = "/robot/velocity")
         # self.velocity.add_service("ros")
 
-        self.teleport2.add_stream("ros","morse.middleware.ros.read_pose.PoseReader", topic = "/robot/teleport")
-        self.teleport2.add_service("ros")
+        # self.teleport2.add_stream("ros","morse.middleware.ros.read_pose.PoseReader", topic = "/robot/teleport")
+        # self.teleport2.add_service("ros")
        
 
 

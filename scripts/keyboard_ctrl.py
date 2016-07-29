@@ -1,9 +1,11 @@
+#only suitable for socket package
 from pymorse import Morse
 
 print("Use WASD to control the Ranger")
 
 with Morse() as simu:
 
+  # motion = simu.robot.motion
   motion = simu.robot.motion
 
   v = 0.0
