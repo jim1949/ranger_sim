@@ -1,0 +1,35 @@
+Notes:
+Problem fixed:
+tf package cannot work so I use my euler transform function for that.
+2016.7.21
+Problem here:
+1.teleport actuator has the collision with the motion actuator. Which means when motion actuator works, the teleport won’t just because they share the sam actuator                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+This is a big problem actually, 
+1)firstly must need to make sure that teleport actuator can work.(cannot open in morse, may it is not pasted correctly in the folder but I’m not going to destroy the folder.)->going to work in the ranger_sim without motion.Let’s what’s going on here.
+
+(I did the test on teleport not teleport2, and I got the robot upside down, so I need to test the teleport first with quaternion to euler function first.)(21)
+(learnt how to use the array in python.just define an empty one…)
+
+Further on: learn to use the teleport actuator properly. It’s found I need to change the roll(x axis) angle  for pi.
+
+So teleport actuator works fine, let’s see how’s going with the teleport2.
+may get some ideas from the tutorial in the journey, because that one has two motion actuators inside of it.(rework on this tutorial and another tutorial which build many robots.)
+
+teleport2 should work fine but it doesn’t move at all.
+Will have two ways to solve it.1)check the tutorial in the journey all over again which may spend over 4 hours for it. And multi robots how to set the actuators.
+
+2)problems here in the script: [middleware.ros_request_manager]step).people.motion2.set_property has no ROS-specific service type. Skipping it.
+Did not register service <get_local_data> (could not complete the post-registration. which means I didn’t add the control correctly.(22)
+
+2)Secondly,may need to make sure that motion control through ros can be worked for these two robots. 
+
+3)Thirdly,may need to make sure there’s no collision between the actuator and the motion actuator.
+Motion actuator can be controlled through Ros. And let’s what will happen there.(21)
+
+
+2.may need to add the interface of ros inside of the robot class.
+
+3.expend one pedestrians to many
+
+4.
