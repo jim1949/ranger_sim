@@ -4,6 +4,7 @@ import message_filters#add message filters, this is one application package with
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import TwistStamped
 from geometry_msgs.msg import Twist
+from sensor_msgs.msg import LaserScan
 import message_filters
 import numpy as np
 import math
@@ -102,7 +103,9 @@ def callback1(msg):
     print(lineflag)
     print("lastlineflag")
     print(lastlineflag)
-	    # print("x!!")
+    # print("x!!")
+    if stopflag==True:
+        motion.linear.x=0
     cmd.publish(motion)
 	# motion.angular.z = +0.5
 
@@ -123,20 +126,57 @@ def callback2(msg):
 	# 		motion.angular.z=0.0
 	# 	else:
 	# 	 	motion.angular.z=-0.1*(angular.z+pi/2)
+def callback3(msg):
+    ranges=msg.ranges
+    angle_min=msg.angle_min
+    angle_max=msg.angle_max
+    intensities=msg.intensities
+    scan_time=msg.scan_time
+    global stopflag
+    print("ranges!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    x=False
+    for i in ranges:
+        # print("I!!!!!!!!!!!!!!!!!!!!!!!")
+        # print(i)
+        if i<10:
+            x=True
+    stopflag=x
 
+    print(stopflag)
+
+
+	#laserscanner
+	#=======================================#
+# std_msgs/Header header
+#   uint32 seq
+#   time stamp
+#   string frame_id
+# float32 angle_min
+# float32 angle_max
+# float32 angle_increment
+# float32 time_increment
+# float32 scan_time
+# float32 range_min
+# float32 range_max
+# float32[] ranges
+# float32[] intensities
+	#=======================================#
 
 
 
 
 #straightline or turning angle
 cmd = rospy.Publisher("/robot/motion", Twist, queue_size = 10)
+# laser=rospy.
 motion = Twist()
-lineflag=1
+stopflag=False#flag if detect any pedestrians
+lineflag=1#flag if it is on the straight line or steering, on which state of 4 edges of path.
 lastlineflag=0
 rospy.init_node("robot_car")
 rospy.Subscriber("/robot/pose", PoseStamped, callback1)
 # rospy.Subscriber("/robot/pose", PoseStamped, callback2)
 rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
+rospy.Subscriber("/robot/sick",LaserScan,callback3)
 
 
 	# rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
