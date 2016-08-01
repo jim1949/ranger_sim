@@ -47,8 +47,11 @@ class Mycar(GroundRobot):
         self.sick.translate(0.0,0.0,0.2)
         self.sick.properties(resolution = 5)
         self.sick.properties(scan_window = 90)
-        self.sick.properties(laser_range = 5.0)
+        self.sick.properties(laser_range = 15.0)
         self.sick.properties(Visible_arc=True)
+
+        self.velocity = Velocity()
+        self.append(self.velocity)
 
         self.pose.add_stream("ros", "morse.middleware.ros.pose.PoseStampedPublisher", topic = "/robot/pose")
         self.pose.add_service("ros")
@@ -56,8 +59,8 @@ class Mycar(GroundRobot):
         self.motion.add_stream("ros","morse.middleware.ros.motion_vw.TwistReader", topic = "/robot/motion")
         self.motion.add_service("ros")
 
-        # self.velocity.add_stream("ros","morse.middleware.ros.velocity.TwistStampedPublisher", topic = "/robot/velocity")
-        # self.velocity.add_service("ros")
+        self.velocity.add_stream("ros","morse.middleware.ros.velocity.TwistStampedPublisher", topic = "/robot/velocity")
+        self.velocity.add_service("ros")
 
         # self.teleport2.add_stream("ros","morse.middleware.ros.read_pose.PoseReader", topic = "/robot/teleport")
         # self.teleport2.add_service("ros")
