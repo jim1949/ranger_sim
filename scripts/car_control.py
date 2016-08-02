@@ -10,6 +10,11 @@ import numpy as np
 import math
 from math import pi
 
+from waypoint_following import waypoint_follower
+
+global nearest_reading, car_x, car_y, car_theta
+nearest_reading=1e7
+
 
 def eulerfromquaterion(q0,q1,q2,q3):
 	
@@ -23,10 +28,12 @@ def eulerfromquaterion(q0,q1,q2,q3):
 
 def callback1(msg):
 	#=======================================#
+    global car_x, car_y, car_theta
+    global lineflag,lastlineflag,nearest_reading
 
     position = msg.pose.position
     orientation = msg.pose.orientation
-    global lineflag,lastlineflag
+   
     # global information
     # information=information+0.1
     # print("1:")
@@ -35,6 +42,10 @@ def callback1(msg):
     # linear = msg.twist.linear
     # angular = msg.twist.angular
     roll,pitch,yaw = eulerfromquaterion(orientation.x,orientation.y,orientation.z,orientation.w)
+    car_x = position.x
+    car_y = position.y
+    car_theta = yaw
+
     #
     #=======================================#
 #     [geometry_msgs/PoseStamped]:
@@ -55,57 +66,67 @@ def callback1(msg):
 	#=======================================#
 	#basic motion control
     
-    if lineflag==0:
-        if abs((yaw+(lastlineflag-1)*pi/2)*180/pi)<1 or (lastlineflag==4 and abs((yaw-pi/2)*180/pi)<1 ):
-            motion.angular.z=0
-            lineflag=lastlineflag+1
-            if lineflag>4:
-                lineflag=1
-                lastlineflag=0
-        else:
-        	motion.angular.z=-5*math.sin(yaw+(lastlineflag-1)*pi/2)
+    # if lineflag==0:
+    #     if abs((yaw+(lastlineflag-1)*pi/2)*180/pi)<1 or (lastlineflag==4 and abs((yaw-pi/2)*180/pi)<1 ):
+    #         motion.angular.z=0
+    #         lineflag=lastlineflag+1
+    #         if lineflag>4:
+    #             lineflag=1
+    #             lastlineflag=0
+    #     else:
+    #     	motion.angular.z=-5*math.sin(yaw+(lastlineflag-1)*pi/2)
 
 
-    if lineflag==1:
-        if position.y<20:
-            motion.linear.x=2.0
-            lineflag=1
-        else:
-	        motion.linear.x=0.0
-	        lastlineflag=1
-	        lineflag=0
-    if lineflag==2:
-        if position.x<1.5:
-    	    motion.linear.x=2.0
-        else:
-            motion.linear.x=0.0
-            lineflag=0
-            lastlineflag=2
-    if lineflag==3:
-    	if position.y>-20:
-    	    motion.linear.x=2.0
-    	else:
-            motion.linear.x=0.0
-            lineflag=0
-            lastlineflag=3
-    if lineflag==4:
-    	if position.x>-1.5:
-    	    motion.linear.x=2.0
-    	else:
-            motion.linear.x=0.0
-            lineflag=0
-            lastlineflag=4
-    print("motion.linear.x")
-    print(motion.linear.x)
-    print("motion.linear.y")
-    print(motion.linear.y)
-    print("lineflag")
-    print(lineflag)
-    print("lastlineflag")
-    print(lastlineflag)
+    # if lineflag==1:
+    #     if position.y<20:
+    #         motion.linear.x=2.0
+    #         lineflag=1
+    #     else:
+	   #      motion.linear.x=0.0
+	   #      lastlineflag=1
+	   #      lineflag=0
+    # if lineflag==2:
+    #     if position.x<1.5:
+    # 	    motion.linear.x=2.0
+    #     else:
+    #         motion.linear.x=0.0
+    #         lineflag=0
+    #         lastlineflag=2
+    # if lineflag==3:
+    # 	if position.y>-20:
+    # 	    motion.linear.x=2.0
+    # 	else:
+    #         motion.linear.x=0.0
+    #         lineflag=0
+    #         lastlineflag=3
+    # if lineflag==4:
+    # 	if position.x>-1.5:
+    # 	    motion.linear.x=2.0
+    # 	else:
+    #         motion.linear.x=0.0
+    #         lineflag=0
+    #         lastlineflag=4
+    # print("motion.linear.x")
+    # print(motion.linear.x)
+    # print("motion.linear.y")
+    # print(motion.linear.y)
+    # print("lineflag")
+    # print(lineflag)
+    # print("lastlineflag")
+    # print(lastlineflag)
     # print("x!!")
-    if stopflag==True:
-        motion.linear.x=0
+
+    motion,lineflag,lastlineflag = waypoint_follower(lineflag, lastlineflag, position,yaw)
+
+    if nearest_reading <= 8.0:
+
+        motion.linear.x = 0.0;
+
+
+    # if stopflag==True:
+        # motion.linear.x=0
+    print("final nearest_reading!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(nearest_reading)
     cmd.publish(motion)
 	# motion.angular.z = +0.5
 
@@ -132,17 +153,20 @@ def callback3(msg):
     angle_max=msg.angle_max
     intensities=msg.intensities
     scan_time=msg.scan_time
-    global stopflag
+    global stopflag, nearest_reading
+
     print("ranges!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    x=False
+    stopflag=False
     for i in ranges:
         # print("I!!!!!!!!!!!!!!!!!!!!!!!")
         # print(i)
-        if i<10:
-            x=True
-    stopflag=x
+        if i<5:
+            stopflag=True
 
     print(stopflag)
+    nearest_reading = min(ranges)
+
+    print("nearest reading: %2.2f" %nearest_reading)
 
 
 	#laserscanner
@@ -173,6 +197,7 @@ stopflag=False#flag if detect any pedestrians
 lineflag=1#flag if it is on the straight line or steering, on which state of 4 edges of path.
 lastlineflag=0
 rospy.init_node("robot_car")
+
 rospy.Subscriber("/robot/pose", PoseStamped, callback1)
 # rospy.Subscriber("/robot/pose", PoseStamped, callback2)
 rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
