@@ -49,7 +49,7 @@ class Mycar(GroundRobot):
         self.sick.properties(scan_window = 90)
         self.sick.properties(laser_range = 15.0)
         self.sick.properties(Visible_arc=True)
-        self.sick.frequency(1.0)
+        self.sick.frequency(20.0)
 
         self.velocity = Velocity()
         self.append(self.velocity)

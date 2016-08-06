@@ -118,6 +118,9 @@ def callback1(msg):
 
     motion,lineflag,lastlineflag = waypoint_follower(lineflag, lastlineflag, position,yaw)
 
+    if position.y*position.x/abs(position.x)<8.0 and position.y*position.x/abs(position.x)>0.0:
+        motion.linear.x = 2.0
+        #decrease the speed here
     if nearest_reading <= 8.0:
 
         motion.linear.x = 0.0;
@@ -157,14 +160,14 @@ def callback3(msg):
 
     print("ranges!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     stopflag=False
-    for i in ranges:
+    for i in ranges[7:]:
         # print("I!!!!!!!!!!!!!!!!!!!!!!!")
         # print(i)
         if i<5:
             stopflag=True
 
     print(stopflag)
-    nearest_reading = min(ranges)
+    nearest_reading = min(ranges[8:])
 
     print("nearest reading: %2.2f" %nearest_reading)
 
@@ -196,7 +199,7 @@ motion = Twist()
 stopflag=False#flag if detect any pedestrians
 lineflag=1#flag if it is on the straight line or steering, on which state of 4 edges of path.
 lastlineflag=0
-rospy.init_node("robot_car")
+rospy.init_node("car_controller")
 
 rospy.Subscriber("/robot/pose", PoseStamped, callback1)
 # rospy.Subscriber("/robot/pose", PoseStamped, callback2)
@@ -209,4 +212,3 @@ rospy.spin() # this will block untill you hit Ctrl+C
 
 # if __name__ == '__main__':
 # 	listener()
-

@@ -8,6 +8,7 @@ Feel free to edit this template as you like!
 from morse.builder import *
 from morse.sensors import *
 from ranger_sim.builder.robots import Mycar
+from ranger_sim.builder.robots import Normalcar
 from ranger_sim.builder.robots import Pedestrian
 from ranger_sim.builder.actuators import Teleport2
 import math
@@ -22,8 +23,13 @@ robot = Mycar()
 
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
-robot.translate(-1.5, -10.0, 1.0)
+robot.translate(-1.5, -15.0, 1.0)
 robot.rotate(0.0, 0.0, 1.57)
+
+# robot2 = Normalcar()
+
+# robot2.translate(1.5,-8.0, 1.0)
+# robot2.rotate(0.0, 0.0, 1.57+3.14)
 
 
 
@@ -32,6 +38,11 @@ robot.rotate(0.0, 0.0, 1.57)
 people = Pedestrian()
 people.translate(5.0, 0.0, 2.0)
 people.rotate(0.0, 0.0, 0.0)
+
+# people2=Pedestrian()
+# people2.translate(-6.0, 10.0, 2.0)
+# people2.rotate(0.0, 0.0, 3.14)
+
 
 # motion2 = MotionVW()#collision
 # motion2.translate(z=0.8)
