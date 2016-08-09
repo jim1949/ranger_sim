@@ -13,16 +13,18 @@ from math import pi
 # from function.point2point import point2point
 from function.point2point1 import point2point
 from tclass.point_rectangle import *
-global nearest_reading, car_x, car_y, car_theta
+global nearest_reading, car_x, car_y, car_theta,car_ctrlSpeed, car_ctrlSteer
 global v,w
 global startflag,destflag
 startflag=True
 destflag=False
 nearest_reading=1e7
+results_file_handle = open("Published_results.dat","a”)
 v=0
 w=0
 global path
 global corner_num
+global 
 corner_num=0
 path=np.array([[-1.5,20],[1.1,20],[1.1,-20],[-1.5,-20]])
 
@@ -49,12 +51,13 @@ def callback1(msg):#position
     global lineflag,lastlineflag,nearest_reading
     global v,w
     global destflag,startflag
-    global corner_num
+    global corner_num,car_ctrlSteer
     
 
 
     position = msg.pose.position
     orientation = msg.pose.orientation
+    car_ctrlSteer=orientation
     rospy.loginfo("positionx %f"%position.x)
     rospy.loginfo("positiony %f"%position.y)
     roll,pitch,yaw = eulerfromquaterion(orientation.x,orientation.y,orientation.z,orientation.w)
@@ -86,8 +89,12 @@ def callback1(msg):#position
 
 
 def callback2(msg):#velocity test
+    global car_ctrlSpeed
 	linear=msg.twist.linear
 	angular=msg.twist.angular
+    car_ctrlSpeed=linear
+
+
 
 def callback3(msg):#scan and collision avoidance.
     ranges=msg.ranges
@@ -121,6 +128,7 @@ while not rospy.is_shutdown():
     motion.angular.z=w
     rospy.loginfo("Turn rate %f"%motion.angular.z)
     rospy.loginfo("Velocity %f"%motion.angular.x)
+    results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
     cmd.publish(motion)
     r.sleep()
 	# rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
