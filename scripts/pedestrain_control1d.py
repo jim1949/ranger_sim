@@ -84,7 +84,7 @@ while not rospy.is_shutdown():
     pub.publish(motion)
     r.sleep()
     # rate.sleep()
-    
+#last pedestrain version 8.9   
 # if __name__=='__main__':
 #     try:
 #         pedestrain_control1()
