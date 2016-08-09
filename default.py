@@ -27,8 +27,8 @@ robot = Mycar()
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
 robot.translate(-1.5, -15.0, 1.0)
-robot.rotate(0.0, 0.0, 1.57)
-
+# robot.rotate(0.0, 0.0, 1.57)
+robot.rotate(0.0, 0.0, -1.57)
 # robot2 = Normalcar()
 
 # robot2.translate(1.5,-8.0, 1.0)

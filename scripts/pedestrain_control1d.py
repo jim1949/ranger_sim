@@ -41,7 +41,7 @@ def callback(msg):
     # print(pt2.x)
     # print(pt2.y)
     # print(yaw)
-    v=2
+    v=0.0
     w=0.0
     # pt1=Point(2,1)
     # pt2=Point(5,2)

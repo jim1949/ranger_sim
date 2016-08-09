@@ -10,10 +10,14 @@ import math
 from math import pi
 
 # from function.waypoint_following import waypoint_follower
-from function.point2point import point2point
+# from function.point2point import point2point
+from function.point2point1 import point2point
 from tclass.point_rectangle import *
 global nearest_reading, car_x, car_y, car_theta
 global v,w
+global startflag,destflag
+startflag=True
+destflag=False
 nearest_reading=1e7
 v=0
 w=0
@@ -44,13 +48,15 @@ def callback1(msg):#position
     global car_x, car_y, car_theta
     global lineflag,lastlineflag,nearest_reading
     global v,w
-    global destflag
+    global destflag,startflag
     global corner_num
     
 
+
     position = msg.pose.position
     orientation = msg.pose.orientation
-
+    rospy.loginfo("positionx %f"%position.x)
+    rospy.loginfo("positiony %f"%position.y)
     roll,pitch,yaw = eulerfromquaterion(orientation.x,orientation.y,orientation.z,orientation.w)
     car_x = position.x
     car_y = position.y
@@ -59,9 +65,11 @@ def callback1(msg):#position
     pt1=Point(position.x,position.y)
     pt2=Point(path[corner_num,0],path[corner_num,1])
 #need to change this spee!
-    v=8.0
-    destflag=True
-    v,w,destflag=point2point(pt1,pt2,yaw,v,w,destflag)
+    # v=8.0
+    
+    v,w,destflag,startflag=point2point(pt1,pt2,yaw,v,w,destflag,startflag)
+    rospy.loginfo("destflag %f"%destflag)
+    rospy.loginfo("startflag %f"%startflag)
     if destflag==True:
         corner_num=corner_num+1
         if corner_num==4:
@@ -112,6 +120,7 @@ while not rospy.is_shutdown():
     motion.linear.x=v
     motion.angular.z=w
     rospy.loginfo("Turn rate %f"%motion.angular.z)
+    rospy.loginfo("Velocity %f"%motion.angular.x)
     cmd.publish(motion)
     r.sleep()
 	# rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
