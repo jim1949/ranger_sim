@@ -65,7 +65,7 @@ def callback1(msg):#position
     pt1=Point(position.x,position.y)
     pt2=Point(path[corner_num,0],path[corner_num,1])
 #need to change this spee!
-    # v=8.0
+    v=8.0
     
     v,w,destflag,startflag=point2point(pt1,pt2,yaw,v,w,destflag,startflag)
     rospy.loginfo("destflag %f"%destflag)
