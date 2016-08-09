@@ -17,7 +17,7 @@ startflag=True
 destflag=False
 v=0
 w=0
-dest=8
+dest=0
 
 global path
 global corner_num
@@ -51,8 +51,8 @@ def callback(msg):
     # print(pt2.y)
     # print(yaw)
  
-    pt1=Point(position.x,position.y)
-    pt2=Point(path[corner_num,0],path[corner_num,1])
+    # pt1=Point(position.x,position.y)
+    # pt2=Point(path[corner_num,0],path[corner_num,1])
 #need to change this spee!
     v=3.0
     
@@ -60,11 +60,12 @@ def callback(msg):
     rospy.loginfo("destflag %f"%destflag)
     rospy.loginfo("startflag %f"%startflag)
     if destflag==True:
-        corner_num=corner_num+1
-        if corner_num==4:
-            corner_num=0
-    print("corner_num")
-    print(corner_num)
+        # corner_num=corner_num+1
+        # if corner_num==4:
+        #     corner_num=0
+        dest=random.uniform(-5,5)
+    print("dest")
+    print(dest)
 
 
 
