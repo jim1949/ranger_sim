@@ -60,7 +60,7 @@ def callback1(msg):#position
     pt2=Point(path[corner_num,0],path[corner_num,1])
 #need to change this spee!
     v=8.0
-    destflag=False
+    destflag=True
     v,w,destflag=point2point(pt1,pt2,yaw,v,w,destflag)
     if destflag==True:
         corner_num=corner_num+1

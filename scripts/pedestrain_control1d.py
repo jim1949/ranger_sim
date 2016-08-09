@@ -11,11 +11,11 @@ from math import pi
 import random
 
 
-global v,w,dest
+global v,w,dest,destflag
 v=0
 w=0
 dest=8
-
+destflag=True
 def eulerfromquaterion(q0,q1,q2,q3):
     
     yaw=math.atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
@@ -28,7 +28,7 @@ def eulerfromquaterion(q0,q1,q2,q3):
 
 def callback(msg):
     global v,w
-    global dest
+    global dest,destflag
 
     position=msg.pose.position
     orientation=msg.pose.orientation
@@ -46,10 +46,9 @@ def callback(msg):
     # pt1=Point(2,1)
     # pt2=Point(5,2)
     # print(pt1)
-    destflag=False
+    
     v,w,destflag=point2point(pt1,pt2,yaw,v,w,destflag)
-    if destflag==True:
-        dest=-dest
+
     print("v")
     print(v)
 
