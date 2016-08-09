@@ -19,6 +19,9 @@ import math
 #
 # 'morse add robot <name> ranger_sim2' can help you to build custom robots.
 #robot of car
+# Import the human model.
+# 
+
 robot = Mycar()
 
 # The list of the main methods to manipulate your components

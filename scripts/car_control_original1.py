@@ -1,16 +1,11 @@
 #individual control script to control the car
 import rospy
-import message_filters#add message filters, this is one application package with ros
-from geometry_msgs.msg import PoseStamped
-from geometry_msgs.msg import TwistStamped
-from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
-import message_filters
 import numpy as np
 import math
 from math import pi
 
-from waypoint_following import waypoint_follower
+from function.waypoint_following import waypoint_follower
 
 global nearest_reading, car_x, car_y, car_theta
 nearest_reading=1e7
