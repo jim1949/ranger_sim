@@ -14,39 +14,42 @@ from math import pi
 from function.point2point1 import point2point
 from tclass.point_rectangle import *
 global nearest_reading, car_x, car_y, car_theta,car_ctrlSpeed, car_ctrlSteer
+car_x=0
+car_y=0
+car_theta=0
+car_ctrlSpeed=0
+car_ctrlSteer=0
 global v,w
 global startflag,destflag
 startflag=True
 destflag=False
 nearest_reading=1e7
-results_file_handle = open("Published_results.dat","a”)
-v=0
 w=0
+v=0
 global path
 global corner_num
-global 
 corner_num=0
 path=np.array([[-1.5,20],[1.1,20],[1.1,-20],[-1.5,-20]])
 
-# 2(1.5,20)->	3(1.5,-20)
-# 	^			|
-# 	|			v
+# 2(1.5,20)->    3(1.5,-20)
+#     ^    |
+#     |    v
 
-# 1(-1.5,20)<-	4(-1.5)
+# 1(-1.5,20)<-    4(-1.5)
 
 
 def eulerfromquaterion(q0,q1,q2,q3):
-	
-	yaw=math.atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
-	pitch=math.asin(2*(q0*q2-q3*q1))
-	roll=math.atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))
-	print("steering angle")
-	#experiment shows this is the yaw angle, and I don't know why.roll and yaw are different...(have changed the name already)
-	print(yaw*180/pi)
-	return roll,pitch,yaw
+    
+    yaw=math.atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
+    pitch=math.asin(2*(q0*q2-q3*q1))
+    roll=math.atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))
+    print("steering angle")
+    #experiment shows this is the yaw angle, and I don't know why.roll and yaw are different...(have changed the name already)
+    print(yaw*180/pi)
+    return roll,pitch,yaw
 
 def callback1(msg):#position
-	#=======================================#
+    #=======================================#
     global car_x, car_y, car_theta
     global lineflag,lastlineflag,nearest_reading
     global v,w
@@ -90,8 +93,8 @@ def callback1(msg):#position
 
 def callback2(msg):#velocity test
     global car_ctrlSpeed
-	linear=msg.twist.linear
-	angular=msg.twist.angular
+    linear=msg.twist.linear
+    angular=msg.twist.angular
     car_ctrlSpeed=linear
 
 
@@ -123,16 +126,19 @@ rospy.Subscriber("/robot/pose", PoseStamped, callback1)
 rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
 rospy.Subscriber("/robot/sick",LaserScan,callback3)
 r=rospy.Rate(30)#30hz
+
 while not rospy.is_shutdown():
+    # results_file_handle = open("Published_results.dat","a")
+    results_file_handle = open("testdata","a")
     motion.linear.x=v
     motion.angular.z=w
     rospy.loginfo("Turn rate %f"%motion.angular.z)
     rospy.loginfo("Velocity %f"%motion.angular.x)
-    results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
+    # results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
     cmd.publish(motion)
     r.sleep()
-	# rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
+    # rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
 
 
 # if __name__ == '__main__':
-# 	listener()
+#     listener()

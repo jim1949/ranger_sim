@@ -89,6 +89,7 @@ def point2point(point1,point2,orientation1,v,w,destflag):
     
     if orientation2*orientation1<0:
         w=-2
+        v=0
 
     elif rangeangle:#straightway
         w=0

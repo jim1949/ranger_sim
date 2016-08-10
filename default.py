@@ -66,7 +66,7 @@ people.rotate(0.0, 0.0, 0.0)
 # # set 'fastmode' to True to switch to wireframe mode
 # env = Environment('indoors-1/boxes', fastmode = False)
 # set 'fastmode' to True to switch to wireframe mode
-env = Environment('/Users/jj/morse/data/environments/indoors-1/crossing.blend', fastmode = False)
+env = Environment('/Users/jj/morse/data/environments/indoors-1/testing.blend', fastmode = False)
 # env = Environment('land-1/rosace_1')
 # env.set_camera_location([-18.0, -6.7, 10.8])
 # env.set_camera_rotation([1.09, 0, -1.14])
