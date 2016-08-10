@@ -32,4 +32,8 @@ Motion actuator can be controlled through Ros. And let’s what will happen ther
 
 3.expend one pedestrians to many
 
-4.
+
+8.10
+
+1.pedestrain will move around a circle, which is quite annoying
+2.vehicle will keep moving even if it see a obstacle over there.( might be the subscriber not synchronise together.
