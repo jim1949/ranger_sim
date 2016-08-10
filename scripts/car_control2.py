@@ -54,13 +54,12 @@ def callback1(msg):#position
     global lineflag,lastlineflag,nearest_reading
     global v,w
     global destflag,startflag
-    global corner_num,car_ctrlSteer
+    global corner_num
     
 
 
     position = msg.pose.position
     orientation = msg.pose.orientation
-    car_ctrlSteer=orientation
     rospy.loginfo("positionx %f"%position.x)
     rospy.loginfo("positiony %f"%position.y)
     roll,pitch,yaw = eulerfromquaterion(orientation.x,orientation.y,orientation.z,orientation.w)
@@ -92,10 +91,11 @@ def callback1(msg):#position
 
 
 def callback2(msg):#velocity test
-    global car_ctrlSpeed
+    global car_ctrlSpeed,car_ctrlSteer
     linear=msg.twist.linear
     angular=msg.twist.angular
-    car_ctrlSpeed=linear
+    car_ctrlSpeed=math.sqrt(linear.x**2+linear.y**2+linear.z**2)
+    car_ctrlSteer=angular.z
 
 
 
@@ -134,7 +134,15 @@ while not rospy.is_shutdown():
     motion.angular.z=w
     rospy.loginfo("Turn rate %f"%motion.angular.z)
     rospy.loginfo("Velocity %f"%motion.angular.x)
-    # results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
+
+    rospy.loginfo("time %f"%rospy.get_time())
+    rospy.loginfo("car_x %f"%car_x)
+    rospy.loginfo("car_y %f"%car_y)
+    rospy.loginfo("car_theta %f"%car_theta)
+    rospy.loginfo("car_ctrlSpeed %f"%car_ctrlSpeed)
+    rospy.loginfo("car_ctrlSteer %f"%car_ctrlSteer)
+
+    results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
     cmd.publish(motion)
     r.sleep()
     # rospy.Subscriber("/robot/velocity", TwistStamped, callback2)

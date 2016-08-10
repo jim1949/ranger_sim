@@ -27,14 +27,22 @@ def point2point(point1,point2,orientation1,v,w,destflag,startflag):
                 elif orientation2-orientation1<-pi:
                     w=-2
                 else:
-                    w=5*math.sin(orientation2-orientation1)#set the maximum angle velocity later on
+                    # w=5*math.sin(orientation2-orientation1)#set the maximum angle velocity later on
+                    w=5*(orientation2-orientation1)
+                    if abs(orientation2-orientation1)>1:
+                        w=(orientation2-orientation1)/abs(orientation2-orientation1)
+
+
             else:
                 w=0
                 # v=8.0
                 startflag=False
 
         else:
-            w=5*math.sin(orientation2-orientation1)
+            w=(orientation2-orientation1)
+            if abs(orientation2-orientation1)>1:
+                w=0.05*(orientation2-orientation1)/abs(orientation2-orientation1)
+
             # v=8.0
     print("angle")
     print(angle)
