@@ -8,10 +8,12 @@ Feel free to edit this template as you like!
 from morse.builder import *
 from morse.sensors import *
 from ranger_sim.builder.robots import Mycar
+from ranger_sim.builder.robots import Pioneerrobot
 from ranger_sim.builder.robots import Normalcar
 from ranger_sim.builder.robots import Pedestrian
 from ranger_sim.builder.actuators import Teleport2
 import math
+
 
 # Add the MORSE mascott, MORSY.
 # Out-the-box available robots are listed here:
@@ -20,9 +22,9 @@ import math
 # 'morse add robot <name> ranger_sim2' can help you to build custom robots.
 #robot of car
 # Import the human model.
-# 
+#Impoty 
 
-robot = Mycar()
+robot =Mycar()
 
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
@@ -71,5 +73,5 @@ env = Environment('/Users/jj/morse/data/environments/indoors-1/crossing.blend', 
 # env.set_camera_location([-18.0, -6.7, 10.8])
 # env.set_camera_rotation([1.09, 0, -1.14])
 
-env.set_camera_location([0, 0, 10.8])
+env.set_camera_location([0, 0, 40.8])
 env.set_camera_rotation([0, 0, -1.14])

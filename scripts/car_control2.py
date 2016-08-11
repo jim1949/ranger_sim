@@ -31,6 +31,8 @@ global corner_num
 corner_num=0
 path=np.array([[-1.5,20],[1.1,20],[1.1,-20],[-1.5,-20]])
 
+global sick_readings
+sick_readings = open("sick_data2.dat", "a")
 # 2(1.5,20)->    3(1.5,-20)
 #     ^    |
 #     |    v
@@ -43,9 +45,9 @@ def eulerfromquaterion(q0,q1,q2,q3):
     yaw=math.atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
     pitch=math.asin(2*(q0*q2-q3*q1))
     roll=math.atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3))
-    print("steering angle")
-    #experiment shows this is the yaw angle, and I don't know why.roll and yaw are different...(have changed the name already)
-    print(yaw*180/pi)
+    # print("steering angle")
+    # #experiment shows this is the yaw angle, and I don't know why.roll and yaw are different...(have changed the name already)
+    # print(yaw*180/pi)
     return roll,pitch,yaw
 
 def callback1(msg):#position
@@ -55,8 +57,8 @@ def callback1(msg):#position
     global v,w
     global destflag,startflag
     global corner_num
-    
 
+    fid = open('nearest_reading.dat', 'a')
 
     position = msg.pose.position
     orientation = msg.pose.orientation
@@ -88,7 +90,9 @@ def callback1(msg):#position
         #decrease the speed here
     if nearest_reading <= 8.0:
         v = 0.0
-
+    print("nearest_reading")
+    print(nearest_reading)
+    fid.write("%s\n" %nearest_reading)
 
 def callback2(msg):#velocity test
     global car_ctrlSpeed,car_ctrlSteer
@@ -100,6 +104,7 @@ def callback2(msg):#velocity test
 
 
 def callback3(msg):#scan and collision avoidance.
+    global sick_readings
     ranges=msg.ranges
     angle_min=msg.angle_min
     angle_max=msg.angle_max
@@ -113,7 +118,12 @@ def callback3(msg):#scan and collision avoidance.
 
     # print(stopflag)
     nearest_reading = min(ranges[8:])
+    mytime = rospy.get_time()
+    sick_readings.write("%2.2f, " %mytime)
+    for value in ranges:
+        sick_readings.write("%2.4f, " %value)
 
+    sick_readings.write("\n")
     # print("nearest reading: %2.2f" %nearest_reading)
 
 
@@ -133,14 +143,14 @@ while not rospy.is_shutdown():
     motion.linear.x=v
     motion.angular.z=w
     rospy.loginfo("Turn rate %f"%motion.angular.z)
-    rospy.loginfo("Velocity %f"%motion.angular.x)
+    rospy.loginfo("Velocity %f"%motion.linear.x)
 
-    rospy.loginfo("time %f"%rospy.get_time())
-    rospy.loginfo("car_x %f"%car_x)
-    rospy.loginfo("car_y %f"%car_y)
-    rospy.loginfo("car_theta %f"%car_theta)
-    rospy.loginfo("car_ctrlSpeed %f"%car_ctrlSpeed)
-    rospy.loginfo("car_ctrlSteer %f"%car_ctrlSteer)
+    # rospy.loginfo("time %f"%rospy.get_time())
+    # rospy.loginfo("car_x %f"%car_x)
+    # rospy.loginfo("car_y %f"%car_y)
+    # rospy.loginfo("car_theta %f"%car_theta)
+    # rospy.loginfo("car_ctrlSpeed %f"%car_ctrlSpeed)
+    # rospy.loginfo("car_ctrlSteer %f"%car_ctrlSteer)
 
     results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
     cmd.publish(motion)

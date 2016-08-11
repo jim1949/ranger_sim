@@ -6,7 +6,7 @@ import math
 def point2point(point1,point2,orientation1,v,w,destflag,startflag):
     orientation2=math.atan2(point2.y-point1.y,point2.x-point1.x)
     angle=orientation2-orientation1
-    if (orientation2+pi)*180/pi<1:
+    if (orientation2+pi)*180/pi<0.1:
         orientation2=pi
 
 

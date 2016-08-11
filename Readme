@@ -35,5 +35,9 @@ Motion actuator can be controlled through Ros. And let’s what will happen ther
 
 8.10
 
-1.pedestrain will move around a circle, which is quite annoying
+1.pedestrain will move around a circle, which is quite annoying(could decrease the speed when it reaches the point)
 2.vehicle will keep moving even if it see a obstacle over there.( might be the subscriber not synchronise together.
+
+I think I found some bugs in the RCPRG laser driver. Debugging the code I saw that when laser topic stops being published, the driver gets stuck in a read of zero bytes because the buffer used to store data received from the sensor is already full (10000 bytes) without having received a valid sensor scan packet.
+
+In this case, we need to decrease the frequency of laser scan. And it seems it solves the problem.(change from 60hz to 25 hz)

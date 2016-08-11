@@ -69,7 +69,7 @@ def callback(msg):
 
 
 rospy.init_node("pedestrain_controller")
-pub=rospy.Publisher("/people/motion",Twist, queue_size=10)
+pub=rospy.Publisher("/people/motion",Twist, queue_size=50)
 rospy.Subscriber("/people/pose", PoseStamped, callback)
 r=rospy.Rate(20)#1hz
 motion=Twist()
