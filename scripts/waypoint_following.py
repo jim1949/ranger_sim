@@ -2,7 +2,7 @@
 from geometry_msgs.msg import Twist
 from math import pi
 import math
-def waypoint_follower(lineflag, lastlineflag, position,yaw):
+def waypoint_follower(lineflag, lastlineflag, position,yaw,path):
     motion = Twist()
     normal_velocity=8.0
     middle_shift=0.2

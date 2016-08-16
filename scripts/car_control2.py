@@ -11,7 +11,7 @@ from math import pi
 
 # from function.waypoint_following import waypoint_follower
 # from function.point2point import point2point
-from function.point2point1 import point2point
+from function.point2point2 import point2point
 from tclass.point_rectangle import *
 global nearest_reading, car_x, car_y, car_theta,car_ctrlSpeed, car_ctrlSteer
 car_x=0
@@ -69,7 +69,7 @@ def callback1(msg):#position
     car_y = position.y
     car_theta = yaw
 
-    pt1=Point(position.x,position.y)
+    pt1=Point(car_x,car_y)
     pt2=Point(path[corner_num,0],path[corner_num,1])
 #need to change this spee!
     v=8.0
@@ -81,8 +81,8 @@ def callback1(msg):#position
         corner_num=corner_num+1
         if corner_num==4:
             corner_num=0
-    print("corner_num")
-    print(corner_num)
+    # print("corner_num")
+    # print(corner_num)
     # motion,lineflag,lastlineflag = waypoint_follower(lineflag, lastlineflag, position,yaw)
 
     if position.y*position.x/abs(position.x)<8.0 and position.y*position.x/abs(position.x)>0.0:
@@ -127,7 +127,7 @@ def callback3(msg):#scan and collision avoidance.
     # print("nearest reading: %2.2f" %nearest_reading)
 
 
-
+results_file_handle = open("testdata","a")
 cmd = rospy.Publisher("/robot/motion", Twist, queue_size = 10)
 motion = Twist()
 stopflag=False#flag if detect any pedestrians
@@ -139,7 +139,7 @@ r=rospy.Rate(30)#30hz
 
 while not rospy.is_shutdown():
     # results_file_handle = open("Published_results.dat","a")
-    results_file_handle = open("testdata","a")
+    
     motion.linear.x=v
     motion.angular.z=w
     rospy.loginfo("Turn rate %f"%motion.angular.z)
