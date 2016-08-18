@@ -29,7 +29,7 @@ v=0
 global path
 global corner_num
 corner_num=0
-path=np.array([[-1.5,20],[1.1,20],[1.1,-20],[-1.5,-20]])
+path=np.array([[-1.5,40],[1.1,40],[1.1,-40],[-1.5,-40]])
 
 global sick_readings
 sick_readings = open("sick_data2.dat", "a")
@@ -72,9 +72,10 @@ def callback1(msg):#position
     pt1=Point(car_x,car_y)
     pt2=Point(path[corner_num,0],path[corner_num,1])
 #need to change this spee!
-    v=8.0
+    # v=8.0
     
-    v,w,destflag,startflag=point2point(pt1,pt2,yaw,v,w,destflag,startflag)
+    v,w,destflag,startflag=point2point(pt1,pt2,yaw,v,w,destflag,startflag,nearest_reading,corner_num)
+    
     rospy.loginfo("destflag %f"%destflag)
     rospy.loginfo("startflag %f"%startflag)
     if destflag==True:
@@ -84,9 +85,8 @@ def callback1(msg):#position
     # print("corner_num")
     # print(corner_num)
     # motion,lineflag,lastlineflag = waypoint_follower(lineflag, lastlineflag, position,yaw)
+    
 
-    if position.y*position.x/abs(position.x)<8.0 and position.y*position.x/abs(position.x)>0.0:
-        v= 2.0
         #decrease the speed here
     if nearest_reading <= 8.0:
         v = 0.0
@@ -127,7 +127,7 @@ def callback3(msg):#scan and collision avoidance.
     # print("nearest reading: %2.2f" %nearest_reading)
 
 
-results_file_handle = open("testdata","a")
+results_file_handle = open("testdata8.dat","a")
 cmd = rospy.Publisher("/robot/motion", Twist, queue_size = 10)
 motion = Twist()
 stopflag=False#flag if detect any pedestrians

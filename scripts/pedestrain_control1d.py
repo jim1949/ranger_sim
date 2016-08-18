@@ -4,7 +4,7 @@ from geometry_msgs.msg import TwistStamped
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from tclass.point_rectangle import *
-from function.point2point1 import point2point
+from function.point2point2 import point2point
 import numpy as np
 import math
 from math import pi
