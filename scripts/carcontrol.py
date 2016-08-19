@@ -391,7 +391,7 @@ def callback2(msg):#velocity test
 
 
 def callback3(msg):#scan and collision avoidance.
-    global sick_readings
+    global sick_readings,reading
     ranges=msg.ranges
     angle_min=msg.angle_min
     angle_max=msg.angle_max
@@ -399,6 +399,7 @@ def callback3(msg):#scan and collision avoidance.
     scan_time=msg.scan_time
     global stopflag, nearest_reading
     stopflag=False
+    readings=ranges
     for i in ranges[7:]:
         if i<5:
             stopflag=True
@@ -413,12 +414,12 @@ def callback3(msg):#scan and collision avoidance.
     sick_readings.write("\n")
     # print("nearest reading: %2.2f" %nearest_reading)
 
-sick_readings = open("data/test1/sick_data.dat", "a")
-
-results_file_handle = open("data/test1/cardata.dat","a")
+sick_readings = open("data/test2/sick_data.dat", "a")
+pedestrains_readings = open("data/test2/pedestrains.dat", "a")
+results_file_handle = open("data/test2/cardata.dat","a")
 cmd = rospy.Publisher("/robot/motion", Twist, queue_size = 10)
 motion = Twist()
-stopflag=False#flag if detect any pedestrians
+stopflag=False#flag if detect any pedestrains
 
 rospy.init_node("car_controller")
 x=input("Y or N?")
@@ -451,6 +452,11 @@ while not rospy.is_shutdown():
     # rospy.loginfo("car_ctrlSteer %f"%car_ctrlSteer)
 
     results_file_handle.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
+    pedestrains_readings.write("%2.6f %2.6f %2.6f %2.6f %2.6f %2.6f \n" %(rospy.get_time(), car_x, car_y, car_theta, car_ctrlSpeed, car_ctrlSteer))
+    if not readings:
+        for value in readings:
+            pedestrains_readings.write("%2.4f, " %value)
+    pedestrains_readings.write("\n")
     cmd.publish(motion)
     r.sleep()
     # rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
