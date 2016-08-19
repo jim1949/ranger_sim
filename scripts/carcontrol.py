@@ -12,12 +12,13 @@ from math import pi
 # from function.point2point import point2point
 # from function.point2point2 import point2point
 # from tclass.point_rectangle import *
-global nearest_reading, car_x, car_y, car_theta,car_ctrlSpeed, car_ctrlSteer
+global nearest_reading,readings, car_x, car_y, car_theta,car_ctrlSpeed, car_ctrlSteer
 global v,w
 global startflag,destflag
 global path
 global corner_num
 global sick_readings
+readings=[]
 car_x=0
 car_y=0
 car_theta=0
@@ -412,16 +413,27 @@ def callback3(msg):#scan and collision avoidance.
     sick_readings.write("\n")
     # print("nearest reading: %2.2f" %nearest_reading)
 
-sick_readings = open("sick_data2.dat", "a")
-results_file_handle = open("/data/cardata.dat","a")
+sick_readings = open("data/test1/sick_data.dat", "a")
+
+results_file_handle = open("data/test1/cardata.dat","a")
 cmd = rospy.Publisher("/robot/motion", Twist, queue_size = 10)
 motion = Twist()
 stopflag=False#flag if detect any pedestrians
+
 rospy.init_node("car_controller")
-rospy.Subscriber("/robot/pose", PoseStamped, callback1)
-rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
-rospy.Subscriber("/robot/sick",LaserScan,callback3)
-r=rospy.Rate(30)#30hz
+x=input("Y or N?")
+if x=="Y"or"y":
+
+    rospy.Subscriber("/robot/pose", PoseStamped, callback1)
+    rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
+    rospy.Subscriber("/robot/sick",LaserScan,callback3)
+else:
+    rospy.Subscriber("/pose", PoseStamped, callback1)
+    rospy.Subscriber("/velocity", TwistStamped, callback2)
+    rospy.Subscriber("/scan",LaserScan,callback3)
+# print("got")
+# x=input("xxxx")
+r=rospy.Rate(60)#30hz
 
 while not rospy.is_shutdown():
     # results_file_handle = open("Published_results.dat","a")
@@ -442,7 +454,7 @@ while not rospy.is_shutdown():
     cmd.publish(motion)
     r.sleep()
     # rospy.Subscriber("/robot/velocity", TwistStamped, callback2)
-
+rospy.spin()
 
 # if __name__ == '__main__':
 #     listener()
